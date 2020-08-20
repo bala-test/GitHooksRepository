@@ -1,0 +1,25 @@
+detekt {
+    toolVersion = "1.11.0-RC1"
+    input = files("src/main/java")
+    config = files("$rootDir/config/detekt/detekt.yml")
+    //filters = ".*/resources/.*,.*/build/.*"
+    //baseline = file("my-detekt-baseline.xml") // Just if you want to create a baseline file.
+    reports {
+        xml {
+            enabled = true                                // Enable/Disable XML report (default: true)
+            destination = file("$buildDir/reports/detekt.xml") // Path where XML report will be stored (default: `build/reports/detekt/detekt.xml`)
+        }
+        html {
+            enabled = true                                // Enable/Disable HTML report (default: true)
+            destination = file("$buildDir/reports/detekt.html") // Path where HTML report will be stored (default: `build/reports/detekt/detekt.html`)
+        }
+        txt {
+            enabled = true                                // Enable/Disable TXT report (default: true)
+            destination = file("$buildDir/reports/detekt.txt") // Path where TXT report will be stored (default: `build/reports/detekt/detekt.txt`)
+        }
+        custom {
+            reportId = "CustomJsonReport"                   // The simple class name of your custom report.
+            destination = file("$buildDir/reports/detekt.json") // Path where report will be stored
+        }
+    }
+}
