@@ -4,9 +4,46 @@ git stash -q --keep-index
 
 echo "Running git pre-commit hook"
 
+echo "Running Kotlin lint"
+./gradlew ktlint
+result=$?
+if [ "$result" = 0 ] ; then
+   echo "Kotlin lint found no problems"
+   exit 0
+else
+   echo
+   "Problems found, files will not be committed."
+   echo "Writing to SonarQube"
+  ./gradlew sonarqube  -Dsonar.host.url=http://localhost:9000/
+   exit 1
+fi
+
+echo "Running detekt"
 ./gradlew check
+ RESULT=$?
+ if [ "$RESULT" = 0 ] ; then
+   echo "Detekt found no problems"
+   exit 0
+else
+   echo
+   "Problems found, files will not be committed."
+   exit 1
+fi
+
+
+
 echo "Running android lint"
 ./gradlew lint
+result=$?
+if [ "$result" = 0 ] ; then
+   echo "Android lint found no problems"
+   exit 0
+else
+   echo
+   "Problems found, files will not be committed."
+   exit 1
+fi
+
 
 echo "Writing to SonarQube"
 ./gradlew sonarqube  -Dsonar.host.url=http://localhost:9000/

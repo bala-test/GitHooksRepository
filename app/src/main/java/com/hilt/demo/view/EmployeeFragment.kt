@@ -16,10 +16,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.emp_fragment_main.*
 @AndroidEntryPoint
 class EmployeeFragment : Fragment() {
-    private val mainViewModel : EmployeeViewModel by viewModels()
-    private var userListView : View? = null
-    var mContainerId:Int = -1
-    private var postListAdapter : PostAdapter? = null
+    private val mainViewModel: EmployeeViewModel by viewModels()
+    private var userListView: View? = null
+    var mContainerId: Int = -1
+    private var postListAdapter: PostAdapter? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -30,15 +30,14 @@ class EmployeeFragment : Fragment() {
         observeViewModel()
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         userListView = inflater.inflate(R.layout.emp_fragment_main, container, false)
-        mContainerId = container?.id?:-1
-        return  userListView
+        mContainerId = container?.id ?: -1
+        return userListView
     }
 
     override fun onResume() {
@@ -46,7 +45,7 @@ class EmployeeFragment : Fragment() {
         mainViewModel.fetchEmpInfo()
     }
 
-    private fun observeViewModel(){
+    private fun observeViewModel() {
         mainViewModel.fetchUsersLiveData().observe(viewLifecycleOwner, Observer {
             it?.let {
                 println("Response From Network :::: $it")
@@ -54,31 +53,27 @@ class EmployeeFragment : Fragment() {
             }
         })
 
-
         mainViewModel.fetchLoadStatus().observe(viewLifecycleOwner, Observer {
-            if(!it){
+            if (!it) {
                 println(it)
-                progressBar.visibility  = View.GONE
+                progressBar.visibility = View.GONE
             }
         })
 
         mainViewModel.fetchError().observe(viewLifecycleOwner, Observer {
             it?.let {
-                if(!TextUtils.isEmpty(it)){
-                    Toast.makeText(context,"$it", Toast.LENGTH_LONG).show()
+                if (!TextUtils.isEmpty(it)) {
+                    Toast.makeText(context, "$it", Toast.LENGTH_LONG).show()
                 }
-
             }
         })
     }
 
-    private fun initAdapter(){
+    private fun initAdapter() {
         postListAdapter = PostAdapter(arrayListOf())
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = postListAdapter
-
         }
-
     }
 }

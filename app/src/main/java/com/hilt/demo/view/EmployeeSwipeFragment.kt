@@ -19,13 +19,12 @@ import kotlinx.android.synthetic.main.emp_fragment_main.recyclerView
 import kotlinx.android.synthetic.main.emp_fragment_swipe_main.*
 
 @AndroidEntryPoint
-class EmployeeSwipeFragment : Fragment(){
+class EmployeeSwipeFragment : Fragment() {
 
-
-    private val mainViewModel : EmployeeViewModel by viewModels()
-    private var userListView : View? = null
-    var mContainerId:Int = -1
-    private var postSwipeAdapter : PostSwipeAdapter? = null
+    private val mainViewModel: EmployeeViewModel by viewModels()
+    private var userListView: View? = null
+    var mContainerId: Int = -1
+    private var postSwipeAdapter: PostSwipeAdapter? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -40,15 +39,14 @@ class EmployeeSwipeFragment : Fragment(){
         }
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         userListView = inflater.inflate(R.layout.emp_fragment_swipe_main, container, false)
-        mContainerId = container?.id?:-1
-        return  userListView
+        mContainerId = container?.id ?: -1
+        return userListView
     }
 
     override fun onResume() {
@@ -56,7 +54,7 @@ class EmployeeSwipeFragment : Fragment(){
         mainViewModel.fetchEmpInfo()
     }
 
-    private fun observeViewModel(){
+    private fun observeViewModel() {
         mainViewModel.fetchUsersLiveData().observe(viewLifecycleOwner, Observer {
             it?.let {
                 println("Response From Network :::: $it")
@@ -64,31 +62,27 @@ class EmployeeSwipeFragment : Fragment(){
             }
         })
 
-
         mainViewModel.fetchLoadStatus().observe(viewLifecycleOwner, Observer {
-            if(!it){
+            if (!it) {
                 println(it)
-                progressBar.visibility  = View.GONE
+                progressBar.visibility = View.GONE
             }
         })
 
         mainViewModel.fetchError().observe(viewLifecycleOwner, Observer {
             it?.let {
-                if(!TextUtils.isEmpty(it)){
-                    Toast.makeText(context,"$it", Toast.LENGTH_LONG).show()
+                if (!TextUtils.isEmpty(it)) {
+                    Toast.makeText(context, "$it", Toast.LENGTH_LONG).show()
                 }
-
             }
         })
     }
 
-    private fun initAdapter(){
+    private fun initAdapter() {
         postSwipeAdapter = PostSwipeAdapter()
         recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = postSwipeAdapter
-
         }
-
     }
 }

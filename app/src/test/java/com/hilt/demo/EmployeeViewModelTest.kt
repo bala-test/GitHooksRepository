@@ -5,7 +5,6 @@ import com.hilt.demo.model.PostModel
 import com.hilt.demo.repository.NetworkRepository
 import com.hilt.demo.viewmodel.EmployeeViewModel
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
@@ -16,10 +15,8 @@ import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
-import retrofit2.HttpException
 import retrofit2.Response
 import retrofit2.Retrofit
 
@@ -42,32 +39,30 @@ class EmployeeViewModelTest {
 
     lateinit var employeeViewModel: EmployeeViewModel
 
-   lateinit var  response : Response<List<PostModel>>
+    lateinit var response: Response<List<PostModel>>
 
     @Before
-    fun setUp(){
+    fun setUp() {
         MockitoAnnotations.initMocks(this)
-
     }
 
     val testDispatcher = TestCoroutineDispatcher()
 
     @Test
-    fun `check employee viewmodel to fetch  data correctly`() = testDispatcher.runBlockingTest{
-        var model = PostModel(1,1,"abcDeeee",true)
-        var list =  arrayListOf<PostModel>()
+    fun `check employee viewmodel to fetch  data correctly`() = testDispatcher.runBlockingTest {
+        var model = PostModel(1, 1, "abcDeeee", true)
+        var list = arrayListOf<PostModel>()
         list.add(model)
         response = Response.success(list)
         networkRepository = NetworkRepository(apiService)
-        employeeViewModel = EmployeeViewModel(testDispatcher,networkRepository)
+        employeeViewModel = EmployeeViewModel(testDispatcher, networkRepository)
         if (retrofit != null) {
-             if(networkRepository!=null) {
-                 Mockito.`when`(networkRepository.fetchEmps()).thenReturn(response)
-             }
+            if (networkRepository != null) {
+                Mockito.`when`(networkRepository.fetchEmps()).thenReturn(response)
+                }
         }
 
         employeeViewModel.fetchEmpInfo()
-        Assert.assertEquals(1,employeeViewModel.fetchUsersLiveData().value?.size)
-
+        Assert.assertEquals(1, employeeViewModel.fetchUsersLiveData().value?.size)
     }
 }
